@@ -1,3 +1,4 @@
+import bisect       # Usage in PriorityQueue class
 
 #______________________________________________________________________________
 # Simple Data Structures: infinity, Dict, Struct
@@ -12,6 +13,7 @@ def Dict(**entries):
     """
     return entries
 
+# ______________________________________________________________________________
 
 class DefaultDict(dict):
     """Dictionary with a default value for unknown keys."""
@@ -28,6 +30,7 @@ class DefaultDict(dict):
         copy.update(self)
         return copy
 
+# ______________________________________________________________________________
 
 class Struct:
     """Create an instance with argument=value slots.
@@ -467,10 +470,11 @@ def print_table(table, header=None, sep=' ', numfmt='%g'):
     justs = [if_(isnumber(x), 'rjust', 'ljust') for x in table[0]]
     if header:
         table = [header] + table
-    table = [[if_(isnumber(x), lambda: numfmt % x, x) for x in row]
-             for row in table]
+
+    table = [[if_(isnumber(x), lambda: numfmt % x, x) for x in row] for row in table]
     maxlen = lambda seq: max(list(map(len, seq)))
     sizes = list(map(maxlen, list(zip(*[list(map(str, row)) for row in table]))))
+
     for row in table:
         for (j, size, x) in zip(justs, sizes, row):
             print(getattr(str(x), j)(size), sep, end=' ')
@@ -498,11 +502,13 @@ class Queue:
         Stack(): A Last In First Out Queue.
         FIFOQueue(): A First In First Out Queue.
         PriorityQueue(lt): Queue where items are sorted by lt, (default <).
+
     Each type supports the following methods and functions:
         q.append(item)  -- add an item to the queue
         q.extend(items) -- equivalent to: for item in items: q.append(item)
         q.pop()         -- return the top item from the queue
         len(q)          -- number of items in q (also q.__len())
+    
     Note that isinstance(Stack(), Queue) is false, because we implement stacks
     as lists.  If Python ever gets interfaces, Queue will be an interface."""
 
@@ -544,10 +550,28 @@ class FIFOQueue(Queue):
         return e
 
 
+class PriorityQueue(Queue):
+    """Queue where items are sorted given its priority."""
+
+    def __init__(self, order=min, f=lambda x: x):
+        self.A = []
+        self.order = order
+        self.f = f
+
+    def append(self, item):
+        bisect.insort(self.A, (self.f(item), id(item), item))
+
+    def __len__(self):
+        return len(self.A)
+
+    def pop(self):
+        return self.A.pop(0)[2] if self.order == min else self.A.pop()[2]
+
+    def __contains__(self, item):
+        return any(item == pair[2] for pair in self.A)
+
+# ______________________________________________________________________________
 
 ## Fig: The idea is we can define things like Fig[3,10] later.
 ## Alas, it is Fig[3,10] not Fig[3.10], because that would be the same as Fig[3.1]
 Fig = {}
-
-
-
