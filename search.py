@@ -67,8 +67,8 @@ class Node:
 
     def __init__(self, state, parent=None, action=None, path_cost=0):
         """Create a search tree Node, derived from a parent by an action."""
-        update(self, state=state, parent=parent, action=action,
-               path_cost=path_cost, depth=0)
+        update(self, state=state, parent=parent,
+                action=action, path_cost=path_cost, depth=0)
         if parent:
             self.depth = parent.depth + 1
 
@@ -86,7 +86,7 @@ class Node:
     def expand(self, problem):
         """Return a list of nodes reachable from this node. [Fig. 3.8]"""
         return [Node(next, self, act,
-                     problem.path_cost(self.path_cost, self.state, act, next))
+                        problem.path_cost(self.path_cost, self.state, act, next))
                 for (act, next) in problem.successor(self.state)]
 
 
@@ -108,7 +108,6 @@ def graph_search(problem, fringe):
             fringe.extend(node.expand(problem))
     return None
 
-
 def breadth_first_graph_search(problem):
     """Search the shallowest nodes in the search tree first. [p 74]"""
     return graph_search(problem, FIFOQueue())  # FIFOQueue -> fringe
@@ -118,7 +117,9 @@ def depth_first_graph_search(problem):
     """Search the deepest nodes in the search tree first. [p 74]"""
     return graph_search(problem, Stack())
 
-
+def branch_and_bound_graph_search(problem):
+    """Search the least path cost node first. [p 81]"""
+    return graph_search(problem, PriorityQueue(min, lambda node: node.path_cost))
 
 # _____________________________________________________________________________
 # The remainder of this file implements examples for the search algorithms.
@@ -225,6 +226,7 @@ romania = UndirectedGraph(Dict(
     P=Dict(R=97),
     R=Dict(S=80),
     U=Dict(V=142)))
+
 romania.locations = Dict(
     A=(91, 492), B=(400, 327), C=(253, 288), D=(165, 299),
     E=(562, 293), F=(305, 449), G=(375, 270), H=(534, 350),
@@ -238,7 +240,7 @@ australia = UndirectedGraph(Dict(
     NT=Dict(WA=1, Q=1),
     NSW=Dict(Q=1, V=1)))
 australia.locations = Dict(WA=(120, 24), NT=(135, 20), SA=(135, 30),
-                           Q=(145, 20), NSW=(145, 32), T=(145, 42), V=(145, 37))
+                            Q=(145, 20), NSW=(145, 32), T=(145, 42), V=(145, 37))
 
 
 class GPSProblem(Problem):
