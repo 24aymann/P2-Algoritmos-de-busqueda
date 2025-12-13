@@ -553,13 +553,13 @@ class FIFOQueue(Queue):
 class PriorityQueue(Queue):
     """Queue where items are sorted given its priority."""
 
-    def __init__(self, order=min, f=lambda x: x):
+    def __init__(self, order=min, sort_function=lambda x: x):
         self.A = []
         self.order = order
-        self.f = f
+        self.sort_function = sort_function
 
     def append(self, item):
-        bisect.insort(self.A, (self.f(item), id(item), item))
+        bisect.insort(self.A, (self.sort_function(item), id(item), item))
 
     def __len__(self):
         return len(self.A)
