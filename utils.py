@@ -1,4 +1,6 @@
-import bisect       # Usage in PriorityQueue class
+import operator
+import math
+import bisect
 
 #______________________________________________________________________________
 # Simple Data Structures: infinity, Dict, Struct

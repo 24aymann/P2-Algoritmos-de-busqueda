@@ -118,8 +118,12 @@ def depth_first_graph_search(problem):
     return graph_search(problem, Stack())
 
 def branch_and_bound_graph_search(problem):
-    """Search the least path cost node first. [p 81]"""
+    """Search the least path cost node first."""
     return graph_search(problem, PriorityQueue(min, lambda node: node.path_cost))
+
+def branch_and_bound_subestimation_graph_search(problem):
+    """Search the node with the lowest estimated total cost first ( f(n) = g(n) + h(n) )."""
+    return graph_search(problem, PriorityQueue(min, lambda node: node.path_cost + problem.h(node))) 
 
 # _____________________________________________________________________________
 # The remainder of this file implements examples for the search algorithms.
