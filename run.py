@@ -1,7 +1,18 @@
 import search
-# Search methods
 
-ab = search.GPSProblem('A', 'B', search.romania)
+# Color codes for terminal output
+RED = "\033[91m"
+RESET = "\033[0m"
+BOLD = "\033[1m"
+
+# Search methods
+problemas = [
+    ('A', 'B'),
+    ('O', 'E'),
+    ('G', 'Z'),
+    ('N', 'D'),
+    ('M', 'F')
+]
 
 def output_generator(method_name, search_function, problem):
     """Print the searches result in a formatted way."""
@@ -21,7 +32,11 @@ def output_generator(method_name, search_function, problem):
         print(f"Tiempo de ejecución:    {stats['execution_time']:.7f} segundos")
         print("")
 
-output_generator("BFS", search.breadth_first_graph_search, ab)
-output_generator("DFS", search.depth_first_graph_search, ab)
-output_generator("Ramificación y Acotación", search.branch_and_bound_graph_search, ab)
-output_generator("Ramificación y Acotación con Subestimación", search.branch_and_bound_subestimation_graph_search, ab)
+for inicio, fin in problemas:
+    print(f"\n{RED}{BOLD} *********** Problema {inicio} → {fin} *********** {RESET}")
+    prob = search.GPSProblem(inicio, fin, search.romania)
+
+    output_generator("BFS", search.breadth_first_graph_search, prob)
+    output_generator("DFS", search.depth_first_graph_search, prob)
+    output_generator("Ramificación y Acotación", search.branch_and_bound_graph_search, prob)
+    output_generator("Ramificación y Acotación con Subestimación", search.branch_and_bound_subestimation_graph_search, prob)
