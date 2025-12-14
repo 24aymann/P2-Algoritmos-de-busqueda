@@ -7,6 +7,7 @@ functions."""
 
 from utils import *
 import random
+import time
 import sys
 
 
@@ -72,6 +73,8 @@ class Node:
         if parent:
             self.depth = parent.depth + 1
 
+        self.stats = {'generated_nodes': 0, 'visited_nodes': 0, 'execution_time': 0}
+
     def __repr__(self):
         return "<Node %s>" % (self.state,)
 
@@ -98,6 +101,7 @@ def graph_search(problem, fringe):
     The argument fringe should be an empty queue.
     If two paths reach a state, only use the best one. [Fig. 3.18]"""
     generated_nodes, visited_nodes = 0, 0
+    start_time = time.time()
 
     closed = {}
     initial = Node(problem.initial)
@@ -109,6 +113,12 @@ def graph_search(problem, fringe):
         visited_nodes += 1
     
         if problem.goal_test(node.state):
+            end_time = time.time()
+            node.stats = {
+                'generated_nodes': generated_nodes,
+                'visited_nodes': visited_nodes,
+                'execution_time': end_time - start_time
+            }
             return node
     
         if node.state not in closed:
