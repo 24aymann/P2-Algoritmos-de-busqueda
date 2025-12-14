@@ -97,15 +97,25 @@ def graph_search(problem, fringe):
     """Search through the successors of a problem to find a goal.
     The argument fringe should be an empty queue.
     If two paths reach a state, only use the best one. [Fig. 3.18]"""
+    generated_nodes, visited_nodes = 0, 0
+
     closed = {}
-    fringe.append(Node(problem.initial))
+    initial = Node(problem.initial)
+    generated_nodes += 1
+    fringe.append(initial)
+    
     while fringe:
         node = fringe.pop()
+        visited_nodes += 1
+    
         if problem.goal_test(node.state):
             return node
+    
         if node.state not in closed:
             closed[node.state] = True
-            fringe.extend(node.expand(problem))
+            successor_nodes = node.expand(problem)
+            generated_nodes += len(successor_nodes)
+            fringe.extend(successor_nodes)
     return None
 
 def breadth_first_graph_search(problem):
