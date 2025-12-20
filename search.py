@@ -101,7 +101,7 @@ def graph_search(problem, fringe):
     The argument fringe should be an empty queue.
     If two paths reach a state, only use the best one. [Fig. 3.18]"""
     generated_nodes, visited_nodes = 0, 0
-    start_time = time.perf_counter()
+    start_time = time.time()
 
     closed = {}
     initial = Node(problem.initial)
@@ -113,7 +113,7 @@ def graph_search(problem, fringe):
         visited_nodes += 1
     
         if problem.goal_test(node.state):
-            end_time = time.perf_counter()
+            end_time = time.time()
             node.stats = {
                 'generated_nodes': generated_nodes,
                 'visited_nodes': visited_nodes,
